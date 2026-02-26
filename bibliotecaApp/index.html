@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca Virtual Escolar</title>
+<link rel="manifest" href="manifest.json">
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+background:linear-gradient(135deg,#4e73df,#1cc88a);
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+transition:0.5s ease;
+}
+
+.dark{
+background:linear-gradient(135deg,#141414,#2b2b2b);
+}
+
+.container{
+display:none;
+text-align:center;
+width:90%;
+max-width:800px;
+animation:fadeSlide 0.6s ease;
+}
+
+.active{
+display:block;
+}
+
+h1,h2{
+margin-bottom:20px;
+}
+
+button{
+padding:12px 22px;
+margin:8px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-size:16px;
+font-weight:bold;
+transition:0.3s;
+background:white;
+color:#333;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+button:hover{
+transform:translateY(-4px) scale(1.05);
+}
+
+input{
+padding:12px;
+width:70%;
+border-radius:10px;
+border:none;
+margin:10px 0;
+font-size:16px;
+}
+
+.card{
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(15px);
+padding:25px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.toggle{
+position:fixed;
+top:15px;
+right:15px;
+background:black;
+color:white;
+border-radius:20px;
+}
+
+@keyframes fadeSlide{
+from{opacity:0; transform:translateY(20px);}
+to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<button class="toggle" onclick="toggleMode()">🌙</button>
+
+<!-- Bienvenida -->
+<div id="welcome" class="container active">
+<h1>📚 Biblioteca Virtual</h1>
+<p>Selecciona tu grado</p>
+
+<button onclick="selectGrade(1)">1°</button>
+<button onclick="selectGrade(2)">2°</button>
+<button onclick="selectGrade(3)">3°</button>
+<button onclick="selectGrade(4)">4°</button>
+<button onclick="selectGrade(5)">5°</button>
+</div>
+
+<!-- Áreas -->
+<div id="areas" class="container">
+<h2>Elige un Área</h2>
+
+<button onclick="showContent('Matemáticas')">🔢 Matemáticas</button>
+<button onclick="showContent('Comunicación')">📖 Comunicación</button>
+<button onclick="showContent('Inglés')">🇬🇧 Inglés</button>
+<button onclick="showContent('Religión')">✝️ Religión</button>
+<button onclick="showContent('DPCC')">🤝 DPCC</button>
+<button onclick="showContent('Arte')">🎨 Arte</button>
+<button onclick="showContent('Física')">⚡ Física</button>
+<button onclick="showContent('Tutoría')">🧠 Tutoría</button>
+
+<br><br>
+<button onclick="backToGrades()">⬅ Volver</button>
+</div>
+
+<!-- Buscador -->
+<div id="content" class="container">
+<div class="card">
+<h2 id="areaTitle"></h2>
+<p id="difficulty"></p>
+
+<input type="text" id="searchInput" placeholder="Escribe lo que quieres buscar...">
+
+<br>
+<button onclick="searchGoogle()">🔎 Buscar en Google</button>
+</div>
+
+<br>
+<button onclick="backToAreas()">⬅ Volver</button>
+</div>
+
+<script>
+let currentGrade = 1;
+let currentArea = "";
+
+function showScreen(screen){
+document.querySelectorAll(".container").forEach(div=>{
+div.classList.remove("active");
+});
+document.getElementById(screen).classList.add("active");
+}
+
+function selectGrade(grade){
+currentGrade = grade;
+showScreen("areas");
+}
+
+function showContent(area){
+currentArea = area;
+document.getElementById("areaTitle").innerText = area + " - " + currentGrade + "° Grado";
+
+let level;
+if(currentGrade==1) level="Dificultad: Fácil 🟢";
+if(currentGrade==2) level="Dificultad: Básico 🟡";
+if(currentGrade==3) level="Dificultad: Intermedio 🟠";
+if(currentGrade==4) level="Dificultad: Avanzado 🔴";
+if(currentGrade==5) level="Dificultad: Experto 🔥";
+
+document.getElementById("difficulty").innerText = level;
+
+showScreen("content");
+}
+
+function searchGoogle(){
+let text = document.getElementById("searchInput").value;
+if(text.trim() !== ""){
+let query = text + " " + currentArea + " " + currentGrade + " grado";
+window.open("https://www.google.com/search?q=" + encodeURIComponent(query), "_blank");
+}
+}
+
+function backToAreas(){
+showScreen("areas");
+}
+
+function backToGrades(){
+showScreen("welcome");
+}
+
+function toggleMode(){
+document.body.classList.toggle("dark");
+}
+</script>
+
+</body>
+</html>
